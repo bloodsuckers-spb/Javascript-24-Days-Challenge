@@ -1,5 +1,7 @@
 # Pomodoro timer
-====
+
+![pomodoro-timer](/images/day1.png "pomodoro-timer")
+
 
 ## Users should be able to:
 
