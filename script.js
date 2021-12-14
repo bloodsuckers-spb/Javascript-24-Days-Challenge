@@ -1,14 +1,13 @@
+const button = document.querySelector('.start');
+const btnTextContent = ['start', 'stop'];
+const min = document.querySelector('.minutes > input');
+const sec = document.querySelector('.seconds > input');
+const ring = document.querySelector('.ring');
 let timerId; 
 
 document.querySelector('.timer').addEventListener('click', function(e) {
-    const btnTextContent = ['start', 'stop'];
-    const min = document.querySelector('.minutes > input');
-    const sec = document.querySelector('.seconds > input');
-    const ring = document.querySelector('.ring');
-
     const btn = e.target.closest('.start');
     const gear = e.target.closest('.settings');
-
     const seconds = e.target.closest('.seconds > input');
 
     if (btn) {
@@ -30,7 +29,7 @@ document.querySelector('.timer').addEventListener('click', function(e) {
     if (gear) {
         clearInterval(timerId)
         ring.classList.remove('ending');
-        document.querySelector('.start').textContent = 'start';
+        button.textContent = 'start';
         min.disabled = false;
         sec.disabled = false;
     }
@@ -42,7 +41,6 @@ document.querySelector('.timer').addEventListener('click', function(e) {
    }
 
     function timerStart () {
-        console.log('timer start')
         ring.classList.remove('ending');
         min.disabled = true;
         sec.disabled = true;
