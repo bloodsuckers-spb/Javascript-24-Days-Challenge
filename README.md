@@ -1,4 +1,4 @@
-# Challendge Advent of CSS and JS
+# Challenge Advent of CSS and JS
 
 ### Day 10: Password Verifier
 
