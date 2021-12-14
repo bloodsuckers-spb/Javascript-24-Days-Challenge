@@ -55,6 +55,9 @@ input[type=text] {
   height: 85px;
 }
 
+input .error {
+  border: 1px solid red;
+}
 
 button {
   width: 100%;

@@ -3,10 +3,24 @@ document.querySelector('.fields').addEventListener('click', function(e){
     if (input) keypress(input);
 });
 
-function keypress(arg) {
-    arg.addEventListener('keypress', function(e) {
-        console.log('keypress');
-        e.target.value =  e.key.toString();
-        console.log(this);
-    });
+
+    function keypress(el) {
+        
+        el.addEventListener('keypress', function(e) {
+            
+            this.value = e.key
+           
+            if (isNaN(e.key)) {
+               this.value = this.value.replace(/\D/, '');
+            } 
+
+            else {
+                if (el.nextElementSibling) {
+                    el.nextElementSibling.focus();
+                     keypress(el.nextElementSibling);
+                 }
+            }
+              
+        });
 }
+
