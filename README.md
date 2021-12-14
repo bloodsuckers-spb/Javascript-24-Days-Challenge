@@ -1,5 +1,5 @@
 # Challendge Advent of CSS and JS
 
-### Day 1: Pomodoro Timer
+### Day 10: Password Verifier
 
-![pomodoro-timer](/images/day1.png "pomodoro-timer")
+![password-verifier](/images/day10.png "Password Verifier")
