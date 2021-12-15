@@ -1,13 +1,10 @@
 # Challenge Advent of CSS and JS
 
-### Day 1: Pomodoro Timer
+### Day 5: Multiple Checkboxes
 
-![pomodoro-timer](/images/day1.png "pomodoro-timer")
+![multiple-checkboxes](/images/day5.png "multiple-checkboxes")
 
-### Day 10: Password Verifier
+#### Users should be able to:
 
-![password-verifier](/images/day10.png "Password Verifier")
-
-### Day 14: Calendar Viewer
-
-![calendar viewer](/images/day14.png "Calendar Viewer")
+* See the list of podcast episodes
+* Check one episode, shift-click to select all the episodes in between
