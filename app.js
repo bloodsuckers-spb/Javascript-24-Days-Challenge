@@ -12,10 +12,7 @@ let year;
 let monthInd;
 
 function createCurrentDateCalendar() {
-    const cells = document.getElementsByClassName('cell');
-    for (let el of cells) {
-        el.remove();
-    }
+    document.querySelectorAll('.cell').forEach(el => el.remove());
     year = currentDate.getFullYear();
     monthInd = currentDate.getMonth();
     const d = new Date(year, monthInd);
@@ -38,12 +35,23 @@ function createCurrentDateCalendar() {
 }
 
 function createCalendar() {
-    const cells = document.getElementsByClassName('cell');
-    for (let el of cells) {
-        el.remove();
+    document.querySelectorAll('.cell').forEach(el => el.remove());
+    const d = new Date(year, monthInd);
+    
+    for (let i = 0; i < d.getDay(); i++) {
+        const div = document.createElement('div');
+        div.classList.add('cell');
+        wrapper.append(div);
     }
-}
 
+     while (d.getMonth() === monthInd) {
+        const div = document.createElement('div');
+        div.classList.add('cell');
+        div.textContent = d.getDate();
+        wrapper.append(div);
+        d.setDate(d.getDate() + 1);
+     }
+}
 
 document.addEventListener("DOMContentLoaded", createCurrentDateCalendar);
 
