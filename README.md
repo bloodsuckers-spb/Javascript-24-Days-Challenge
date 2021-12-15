@@ -1,4 +1,4 @@
-# Challendge Advent of CSS and JS
+# Challenge Advent of CSS and JS
 
 ### Day 1: Pomodoro Timer
 
@@ -7,3 +7,7 @@
 ### Day 10: Password Verifier
 
 ![password-verifier](/images/day10.png "Password Verifier")
+
+### Day 14: Calendar Viewer
+
+![calendar viewer](/images/day10.png "Calendar Viewer")
