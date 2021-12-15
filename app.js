@@ -4,83 +4,57 @@ const wrapper = document.querySelector('.wrapper');
 const calendarTitle = document.querySelector('.month');
 
 const currentDate = new Date();
-const currentDay = new Date().getDate();
+const currentDay = currentDate.getDate();
 const currentYear = currentDate.getFullYear();
 const currentMonthInd = currentDate.getMonth();
 
-let year;
-let monthInd;
+let titleYear = currentYear;
+let titleMonthInd = currentMonthInd;
 
-function createCurrentDateCalendar() {
-    document.querySelectorAll('.cell').forEach(el => el.remove());
-    year = currentDate.getFullYear();
-    monthInd = currentDate.getMonth();
-    const d = new Date(year, monthInd);
-    calendarTitle.textContent = `${year} - ${monthsArr[monthInd]}`;
-    
-    for (let i = 0; i < d.getDay(); i++) {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        wrapper.append(div);
-    }
-
-     while (d.getMonth() === currentMonthInd) {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        div.textContent = d.getDate();
-        if (d.getDate() === currentDay) div.classList.add('today');
-        wrapper.append(div);
-        d.setDate(d.getDate() + 1);
-     }
-}
-
-function createCalendar() {
-    document.querySelectorAll('.cell').forEach(el => el.remove());
-    const d = new Date(year, monthInd);
-    
-    for (let i = 0; i < d.getDay(); i++) {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        wrapper.append(div);
-    }
-
-     while (d.getMonth() === monthInd) {
-        const div = document.createElement('div');
-        div.classList.add('cell');
-        div.textContent = d.getDate();
-        wrapper.append(div);
-        d.setDate(d.getDate() + 1);
-     }
-}
-
-document.addEventListener("DOMContentLoaded", createCurrentDateCalendar);
-
-wrapper.addEventListener('click', function(e) {
-    
+function arrowClick(e) {
     if (e.target.closest('.previous')) {
-        console.log('previousArrow');
-        monthInd--;
-        if (monthInd < 0) {
-            monthInd = monthsArr.length - 1;
-            year--;
+        titleMonthInd--;
+        if (titleMonthInd < 0) {
+            titleMonthInd = monthsArr.length - 1;
+            titleYear--;
         }
-        calendarTitle.textContent = `${year} - ${monthsArr[monthInd]}`;
-        //если год и месяц соответствуют текущим запускаем createCurrentDateCalendar
-        if (year === currentYear && monthInd === currentMonthInd) createCurrentDateCalendar();
-        else createCalendar();
     }
     
     if (e.target.closest('.next')) {
-        console.log('nextArrow')
-        monthInd++;
-        if (monthInd === monthsArr.length) {
-            monthInd = 0;
-            year++;
+        titleMonthInd++;
+        if (titleMonthInd === monthsArr.length) {
+            titleMonthInd = 0;
+            titleYear++;
         } 
-        calendarTitle.textContent = `${year} - ${monthsArr[monthInd]}`;
-        console.log(year)
-        if (year === currentYear && monthInd === currentMonthInd) createCurrentDateCalendar();
-        else createCalendar();
-        
     }
-});
+    createDateCalendar(e);
+}
+
+function createDateCalendar(e) {
+    const d = new Date(titleYear, titleMonthInd);
+    calendarTitle.textContent = `${titleYear} - ${monthsArr[titleMonthInd]}`;
+    
+    if (e.type !== 'DOMContentLoaded') {
+        document.querySelectorAll('.cell').forEach(el => el.remove());
+    } 
+    
+    for (let i = 0; i < d.getDay(); i++) {
+        const div = document.createElement('div');
+        div.classList.add('cell');
+        wrapper.append(div);
+    }
+
+     while (d.getMonth() === titleMonthInd) {
+        const div = document.createElement('div');
+        div.classList.add('cell');
+        div.textContent = d.getDate();
+        if (d.getDate() === currentDay && titleYear === currentYear && titleMonthInd === currentMonthInd) {
+            div.classList.add('today');
+        } 
+        wrapper.append(div);
+        d.setDate(d.getDate() + 1);
+     }
+}
+
+document.addEventListener("DOMContentLoaded", createDateCalendar);
+wrapper.addEventListener('click', arrowClick);
