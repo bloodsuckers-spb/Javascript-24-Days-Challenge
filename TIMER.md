@@ -1,7 +1,6 @@
 # Pomodoro timer
 
-![pomodoro-timer](/images/screen.png "pomodoro-timer")
-
+![pomodoro-timer](/images/day1-screen.png "pomodoro-timer")
 
 ## Users should be able to:
 
