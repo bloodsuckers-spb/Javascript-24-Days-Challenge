@@ -2,7 +2,7 @@
 
 ### Day 1: Pomodoro Timer
 
-![pomodoro-timer](/images/day1-screen "pomodoro-timer")
+![pomodoro-timer](/images/day1-screen.png "pomodoro-timer")
 
 Deploy: [Pomodoro Timer](https://bloodsuckers-spb.github.io/advent-of-js/day1/ "Pomodoro Timer")
 
