@@ -4,6 +4,10 @@
 
 ![pomodoro-timer](/images/day1.png "pomodoro-timer")
 
+Deploy: [Pomodoro Timer](https://bloodsuckers-spb.github.io/advent-of-js/day1/ "Pomodoro Timer")
+
+https://bloodsuckers-spb.github.io/advent-of-js/day1/
+
 ### Day 10: Password Verifier
 
 ![password-verifier](/images/day10.png "Password Verifier")
