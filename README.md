@@ -2,7 +2,7 @@
 
 ### Day 14: Calendar Viewer
 
-![calendar viewer](/images/day14.png "Calendar Viewer")
+![calendar viewer](/images/screen.png "Calendar Viewer")
 
 ### Users should be able to:
 
