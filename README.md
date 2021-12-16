@@ -2,7 +2,7 @@
 
 ### Day 10: Password Verifier
 
-![password-verifier](/images/day10.png "Password Verifier")
+![password-verifier](/images/screen.png "Password Verifier")
 
 ### Users should be able to: 
 
