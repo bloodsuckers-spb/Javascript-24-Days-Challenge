@@ -1,68 +1,73 @@
-const button = document.querySelector('.start');
-const btnTextContent = ['start', 'stop'];
-const min = document.querySelector('.minutes > input');
-const sec = document.querySelector('.seconds > input');
-const ring = document.querySelector('.ring');
-let timerId; 
+const timer = document.querySelector('.timer');
+const button = timer.querySelector('.start, .stop');
+const settings = timer.querySelector('.settings');
+const minutes = timer.querySelector('.minutes input');
+const seconds = timer.querySelector('.seconds input');
+const btnCaptureStart = 'start';
+const btnCaptureEnd = 'end';
+const ring = document.querySelector('.wrapper .ring');
+let timerId;
 
-document.querySelector('.timer').addEventListener('click', function(e) {
-    const btn = e.target.closest('.start');
-    const gear = e.target.closest('.settings');
-    const seconds = e.target.closest('.seconds > input');
 
-    if (btn) {
+const timerStop = () => {
+  clearInterval(timerId);
+  settings.disabled = false;
+  if (button.disabled) {
+    ring.classList.add('ending');
+  }
+};
 
-        if (parseInt(min.value) === 0 && parseInt(sec.value) === 0) {
-            return;
-        }
-
-        if (e.target.textContent === btnTextContent[0]) {
-            e.target.textContent = btnTextContent[1];
-            timerStart();
-        }
-        else {
-            e.target.textContent = btnTextContent[0];
-            timerStop();
-        }
+const timerStart = () => {
+  settings.disabled = true;
+  minutes.disabled = true;
+  seconds.disabled = true;
+  timerId = setInterval(function () {
+    if (!(+minutes.value + +seconds.value)) {
+      button.disabled = true;
+      btnCapture();
+      return;
     }
-
-    if (gear) {
-        clearInterval(timerId)
-        ring.classList.remove('ending');
-        button.textContent = 'start';
-        min.disabled = false;
-        sec.disabled = false;
+    if (seconds.value == 0) {
+      seconds.value = 60;
+      minutes.value--;
     }
+    seconds.value--;
 
-   if (seconds) {
-       e.target.addEventListener("input", ()=> {
-          if (e.target.value > 59) e.target.value = 59;
-       })
-   }
+    if (seconds.value.length < 2) seconds.value = '0' + seconds.value;
+    if (minutes.value.length < 2) minutes.value = '0' + minutes.value;
 
-    function timerStart () {
-        ring.classList.remove('ending');
-        min.disabled = true;
-        sec.disabled = true;
-        timerId  = setInterval( function() {
-            if (parseInt(min.value) === 0 && parseInt(sec.value) === 0) {
-                timerStop();
-                ring.classList.add('ending');
-                return;
-            }
+}, 1000);
+};
 
-            if (sec.value == 0) {
-                sec.value = 60;
-            min.value--;
-            }
-        sec.value--;
-        
-        if (sec.value.length < 2) sec.value = '0' + sec.value;
-        if (min.value.length < 2) min.value = '0' + min.value;
-        }, 1000);
-    }
-    
-    function timerStop () {
-        clearInterval(timerId);
-    }
-});
+const clickOnGear = () => {
+  ring.classList.remove('ending');
+  minutes.disabled = false;
+  seconds.disabled = false;
+  timer.addEventListener('input', (e) => {
+    if (e.target.value > 59) e.target.value = 59;
+    if (+minutes.value + +seconds.value) {
+      button.disabled = false;
+    } else button.disabled = true;
+  });
+};
+
+const btnCapture = () => {
+  if (button.textContent === btnCaptureStart) {
+    button.textContent = btnCaptureEnd;
+    timerStart();
+  } else {
+    button.textContent = btnCaptureStart;
+    timerStop();
+  }
+};
+
+const timerClicked = (e) => {
+  const btn = e.target.closest('.start, .stop');
+  const gear = e.target.closest('.settings');
+  e.stopImmediatePropagation();
+
+  if (btn) btnCapture();
+  if (gear && !settings.disabled) clickOnGear();
+};
+
+timer.addEventListener('click', timerClicked);
