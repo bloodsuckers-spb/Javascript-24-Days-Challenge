@@ -8,6 +8,10 @@ const btnCaptureEnd = 'end';
 const ring = document.querySelector('.wrapper .ring');
 let timerId;
 
+const timePrettier = (time) => {
+  return time.length < 2 ? time.padStart(2, '0') : time;
+};
+
 const timerStop = () => {
   clearInterval(timerId);
   settings.disabled = false;
@@ -32,8 +36,8 @@ const timerStart = () => {
     }
     seconds.value--;
 
-    if (seconds.value.length < 2) seconds.value = '0' + seconds.value;
-    if (minutes.value.length < 2) minutes.value = '0' + minutes.value;
+    minutes.value = timePrettier(minutes.value);
+    seconds.value = timePrettier(seconds.value);
   }, 1000);
 };
 
