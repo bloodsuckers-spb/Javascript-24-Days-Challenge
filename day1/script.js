@@ -8,7 +8,6 @@ const btnCaptureEnd = 'end';
 const ring = document.querySelector('.wrapper .ring');
 let timerId;
 
-
 const timerStop = () => {
   clearInterval(timerId);
   settings.disabled = false;
@@ -35,8 +34,7 @@ const timerStart = () => {
 
     if (seconds.value.length < 2) seconds.value = '0' + seconds.value;
     if (minutes.value.length < 2) minutes.value = '0' + minutes.value;
-
-}, 1000);
+  }, 1000);
 };
 
 const clickOnGear = () => {
@@ -62,12 +60,13 @@ const btnCapture = () => {
 };
 
 const timerClicked = (e) => {
-  const btn = e.target.closest('.start, .stop');
-  const gear = e.target.closest('.settings');
+  const target = e.target.closest('button');
   e.stopImmediatePropagation();
 
-  if (btn) btnCapture();
-  if (gear && !settings.disabled) clickOnGear();
+  if (target === button) btnCapture();
+  if (target === settings && !settings.disabled) {
+    clickOnGear();
+  }
 };
 
 timer.addEventListener('click', timerClicked);
