@@ -1,76 +1,73 @@
 const form = document.querySelector('form');
+const data = {};
 
-const fieldName = ['name', 'email', 'password', 'confirm-password'];
-const success = '<img src="./images/success.svg" alt="Success" />';
-
-let str = fieldName[0];
-
-const data = {
-  name: '',
-  email: '',
-  password: '',
-  confirmPass: '',
+const showValidationCheck = (el, bool) => {
+  const errorField = el.parentElement.querySelector('.error');
+  const successField = el.parentElement.querySelector('.success');
+  
+  if (bool) {
+    successField.innerHTML = '<img src="./images/success.svg" alt="Success" />';
+    errorField.innerHTML = '';
+  } else {
+    successField.innerHTML = '';
+    errorField.innerHTML = `<img src="./images/error.svg" alt="Error" />
+      //   A ${el.name} is required`;
+  }
 };
 
-function validate(e) {
-  const input = e.target.closest('.field__input');
-  const btn = e.target.closest('.show-hide');
-  e.stopPropagation();
-
-  if (btn) {
-    const elem = e.target.parentElement.firstElementChild;
-    e.preventDefault();
-    elem.type = elem.type === 'text' ? 'password' : 'text';
+const toValidate = (el) => {
+  if (!el.value.length) {
+    showValidationCheck(el, false);
+    return;
   }
 
-  if (input) {
-   
-    if (input.name === fieldName[2]) {
-      str = fieldName[2];
-      output(input.parentElement.lastElementChild, false);
-      input.addEventListener('input', function (e) {
-        input.value = input.value.trim();
-        data.password = e.target.value;
-        if (input.value.length) {
-          output(input.parentElement.lastElementChild, true);
-        }
-      });
+  // валидация EMAIL
+
+  if (el.name === 'confirm-password') {
+    if (data[el.name] !== data.password) {
+      showValidationCheck(el, false);
+      return;
+    }
+  }
+    showValidationCheck(el, true);
+};
+
+const addInputListeners = (el) => {
+  el.addEventListener('input', (e) => {
+    e.target.value = e.target.value.trim();
+    data[e.target.name] = e.target.value;
+  });
+  el.addEventListener('focus', (e) => {
+    console.log('focus');
+  });
+  el.addEventListener('blur', (e) => {
+    toValidate(e.target);
+  });
+};
+
+const switchPasswordVisibility = (target) => {
+  const el = target.parentElement.querySelector('input');
+  el.type = el.type === 'text' ? 'password' : 'text';
+} 
+
+const clickOnForm = (e) => {
+    e.preventDefault();
+
+    if (e.target.closest('.field__input')) {
+      addInputListeners(e.target)
+     
+    }
+
+    if (e.target.closest('.submit')) {
+      console.log('submit')
     }
 
 
-    input.addEventListener('focus', function() {
-        console.log('focus');
-    })
+    if (e.target.closest('.show-hide')) {
+      switchPasswordVisibility(e.target);
+    }
 
-
-    input.addEventListener('blur', function () {
-      const bool = input.value.trim().length;
-      input.value = input.value.trim();
-
-      if (this.name == fieldName[0]) {
-        data.name = input.value;
-        str = fieldName[0];
-      }
-      if (input.name === fieldName[2]) {
-        data.password = input.value;
-        str = fieldName[2];
-      }
-
-      output(input.parentElement.lastElementChild, bool);
-    });
-  }
 }
 
-function output(el, bool) {
-  if (bool) {
-    el.previousElementSibling.innerHTML = '';
-    el.innerHTML = success;
-  } else {
-    let error = `<img src="./images/error.svg" alt="Error" />
-  A ${str} is required`;
-    el.previousElementSibling.innerHTML = error;
-    el.innerHTML = '';
-  }
-}
 
-form.addEventListener('click', validate);
+form.addEventListener('click', clickOnForm);
