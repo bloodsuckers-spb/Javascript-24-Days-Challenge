@@ -106,25 +106,39 @@ input[type="submit"] {
   margin-top: 10px;
 }
 
-.error,
-.success {
+.submit:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.output {
   position: absolute;
   top: 30px;
   left: 460px;
-  width: 300px;
+  width: 250px;
+  height: 25px;
   display: flex;
   align-items: center;
 }
 
-.error {
+.output__img {
+  background-image: none;
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 100%;
+}
+
+.output__text {
+  margin-left: 10px;
   color: #FF0000;
 }
 
-.success {
-  color: #5FA12B;
+ .valid {
+  background-image: url('/day19/images/success.svg');
 }
 
-.error img,
-.success img {
-  margin-right: 5px;
+.invalid {
+  background-image: url('./images/error.svg');
 }
+
+

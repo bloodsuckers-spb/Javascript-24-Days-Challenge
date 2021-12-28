@@ -14,36 +14,38 @@
   <form action="">
     <h1>Signup</h1>
     <div class="field">
-      <input class="field__input" type="text" name="name" id="name" placeholder=" " />
+      <input class="field__input" type="text" name="name" id="name" placeholder=" "/>
       <label for="name">Name</label>
-      <div class="error">
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
       </div>
-      <div class="success"></div>
     </div>
     <div class="field">
       <input class="field__input" type="email" name="email" id="email" placeholder=" " />
       <label for="email">Email</label>
-      <div class="error">
-      </div>
-      <div class="success">
-        <!-- <img src="./images/success.svg" alt="Success" /> -->
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
       </div>
     </div>
     <div class="field">
-      <input class="field__input" type="password" data-i="password" name="password" id="password" placeholder=" " />
+      <input class="field__input" type="password" data-i="password" name="password" id="password" placeholder=" "/>
       <label for="password">Password</label>
       <button class="show-hide"></button>
-      <div class="error">
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
       </div>
-      <div class="success"></div>
     </div>
     <div class="field show">
-      <input class="field__input" type="password" name="confirm-password" id="confirm-password" placeholder=" " />
+      <input class="field__input confirm-password" type="password" name="confirm-password" id="confirm-password" placeholder=" " disabled required/>
       <label for="confirm-password">Confirm Password</label>
       <button class="show-hide"></button>
-      <div class="error">
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
       </div>
-      <div class="success"></div>
     </div>
     <div class="field">
       <input class="submit" type="submit" name="submit" value="Submit" />
