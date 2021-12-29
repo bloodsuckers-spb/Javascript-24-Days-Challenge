@@ -25,45 +25,48 @@ const showValidationCheck = (el, bool, str) => {
   }
 };
 
-const validate = (e) => {
+const validate = (el) => {
   let bool = false;
 
-  if (e.target.classList[0] === 'show-hide' || e.target.value === 'Submit') {
+  if (!el.value.length) {
+    showValidationCheck(el, false);
     return;
   }
 
-  if (!e.target.value.length) {
-    showValidationCheck(e.target, false);
-    return;
+  data[el.name] = el.value;
+
+  if (el.name === 'name') {
+    bool = el.value.length >= 3;
   }
 
-  data[e.target.name] = e.target.value;
-
-  if (e.target.name === 'name') {
-    bool = e.target.value.length >= 3;
-  }
-
-  if (e.target.name === 'email') {
+  if (el.name === 'email') {
     const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    bool = reg.test(e.target.value);
+    bool = reg.test(el.value);
   }
 
-  if (e.target.name === 'password') {
-    bool = e.target.value.length >= 4;
+  if (el.name === 'password') {
+    bool = el.value.length >= 4;
     if (bool) {
       const confirm = form.querySelector('.confirm-password');
       confirm.disabled = false;
     }
   }
 
-  if (e.target.name === 'confirm-password') {
-    bool = data[e.target.name] === data.password;
+  if (el.name === 'confirm-password') {
+    bool = data[el.name] === data.password;
     if (!bool) {
-      showValidationCheck(e.target, bool, e.target.name);
+      showValidationCheck(el, bool, el.name);
       return;
     }
   }
-  showValidationCheck(e.target, bool);
+  showValidationCheck(el, bool);
+};
+
+const elemOnBlur = (e) => {
+  if (e.target.classList[0] === 'show-hide' || e.target.value === 'Submit') {
+    return;
+  }
+  validate(e.target);
 };
 
 const clickOnForm = (e) => {
@@ -80,4 +83,4 @@ const clickOnForm = (e) => {
 };
 
 form.addEventListener('click', clickOnForm);
-form.addEventListener('blur', validate, true);
+form.addEventListener('blur', elemOnBlur, true);
