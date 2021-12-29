@@ -63,14 +63,14 @@ const clickOnForm = (e) => {
   e.preventDefault();
 
   if (e.target.closest('.submit')) {
-    console.log('submit');
+    console.log('submit')
   }
 
   if (e.target.closest('.show-hide')) {
+    e.target.classList.toggle('hide');
     switchPasswordVisibility(e.target);
   }
 };
-
 
 form.addEventListener('click', clickOnForm);
 form.addEventListener('blur', validate, true);

@@ -88,8 +88,8 @@ input[type=password]:focus + label {
   cursor: pointer;
 }
 
-.show .show-hide {
-  background-image: url('./images/hide.svg');
+.hide {
+  background: url('./images/hide.svg') left top no-repeat;
   background-size: 32px 32px;
   top: 28px;
 }
