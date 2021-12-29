@@ -28,10 +28,16 @@ const showValidationCheck = (el, bool, str) => {
 const validate = (e) => {
   let bool = false;
 
+  if (e.target.classList[0] === 'show-hide' || e.target.value === 'Submit') {
+    return;
+  }
+
   if (!e.target.value.length) {
     showValidationCheck(e.target, false);
     return;
   }
+
+  data[e.target.name] = e.target.value;
 
   if (e.target.name === 'name') {
     bool = e.target.value.length >= 3;
@@ -64,7 +70,7 @@ const clickOnForm = (e) => {
   e.preventDefault();
 
   if (e.target.closest('.submit')) {
-    console.log('submit');
+    console.log(data);
   }
 
   if (e.target.closest('.show-hide')) {
