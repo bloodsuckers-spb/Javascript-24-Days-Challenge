@@ -6,7 +6,7 @@ const switchPasswordVisibility = (target) => {
   el.type = el.type === 'text' ? 'password' : 'text';
 };
 
-const showValidationCheck = (el, bool, str) => {
+const showValidationCheck = (el, bool, str = 'This field is required') => {
   const [outputImg, outputText] =
     el.parentElement.querySelector('.output').children;
   outputText.innerHTML = '';
@@ -17,16 +17,13 @@ const showValidationCheck = (el, bool, str) => {
   } else {
     outputImg.classList.remove('valid');
     outputImg.classList.add('invalid');
-    if (str) {
-      outputText.innerHTML = `passwords fields should match`;
-      return;
-    }
-    outputText.innerHTML = `This field is required`;
+    outputText.innerHTML = str;
   }
 };
 
 const validate = (el) => {
   let bool = false;
+  let str = '';
 
   if (!el.value.length) {
     showValidationCheck(el, false);
@@ -37,15 +34,18 @@ const validate = (el) => {
 
   if (el.name === 'name') {
     bool = el.value.length >= 3;
+    str = 'Must enter a valid name';
   }
 
   if (el.name === 'email') {
     const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
     bool = reg.test(el.value);
+    str = 'Must enter a valid email';
   }
 
   if (el.name === 'password') {
     bool = el.value.length >= 4;
+    str = 'Must enter a valid password';
     if (bool) {
       const confirm = form.querySelector('.confirm-password');
       confirm.disabled = false;
@@ -54,12 +54,13 @@ const validate = (el) => {
 
   if (el.name === 'confirm-password') {
     bool = data[el.name] === data.password;
+    str = `passwords fields should match`;
     if (!bool) {
-      showValidationCheck(el, bool, el.name);
+      showValidationCheck(el, bool, str);
       return;
     }
   }
-  showValidationCheck(el, bool);
+  showValidationCheck(el, bool, str);
 };
 
 const elemOnBlur = (e) => {
