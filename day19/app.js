@@ -38,7 +38,8 @@ const validate = (e) => {
   }
 
   if (e.target.name === 'email') {
-    bool = e.target.value.length >= 6;
+    const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    bool = reg.test(e.target.value);
   }
 
   if (e.target.name === 'password') {
@@ -63,7 +64,7 @@ const clickOnForm = (e) => {
   e.preventDefault();
 
   if (e.target.closest('.submit')) {
-    console.log('submit')
+    console.log('submit');
   }
 
   if (e.target.closest('.show-hide')) {
