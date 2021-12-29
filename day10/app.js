@@ -8,9 +8,9 @@ const verification = {
 };
 
 document.querySelector('form').addEventListener('click', function(e){
-    e.preventDefault();
     const input = e.target.closest('input');
     const button = e.target.closest('button');
+    e.preventDefault();
 
     if (input) onInput(input);
     

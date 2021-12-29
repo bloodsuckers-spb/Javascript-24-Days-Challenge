@@ -1,68 +1,87 @@
-const button = document.querySelector('.start');
-const btnTextContent = ['start', 'stop'];
-const min = document.querySelector('.minutes > input');
-const sec = document.querySelector('.seconds > input');
-const ring = document.querySelector('.ring');
-let timerId; 
+const timer = document.querySelector('.timer');
+const button = timer.querySelector('.start, .stop');
+const settings = timer.querySelector('.settings');
+const minutes = timer.querySelector('.minutes input');
+const seconds = timer.querySelector('.seconds input');
+const ring = document.querySelector('.wrapper .ring');
+const btnCaptureStart = 'start';
+const btnCaptureEnd = 'end';
+let timerId;
 
-document.querySelector('.timer').addEventListener('click', function(e) {
-    const btn = e.target.closest('.start');
-    const gear = e.target.closest('.settings');
-    const seconds = e.target.closest('.seconds > input');
+const toSwitch = (item, bool) => {
+  if (Array.isArray(item)) {
+    item.forEach(el => el.disabled = bool);
+  }
+  else {
+      item.disabled = bool;
+  } 
+}
 
-    if (btn) {
+const timerOnInput = () => {
+  timer.addEventListener('input', (e) => {
+    const flag = (!(+minutes.value + +seconds.value))
+    toSwitch(button, flag)
+    if (e.target.value > 59) e.target.value = 59;
+  });
+}
 
-        if (parseInt(min.value) === 0 && parseInt(sec.value) === 0) {
-            return;
-        }
+const timePrettier = (time) => {
+  return time.length < 2 ? time.padStart(2, '0') : time;
+};
 
-        if (e.target.textContent === btnTextContent[0]) {
-            e.target.textContent = btnTextContent[1];
-            timerStart();
-        }
-        else {
-            e.target.textContent = btnTextContent[0];
-            timerStop();
-        }
+const timeIncrement = () => {
+  if (!+seconds.value) {
+    seconds.value = 60;
+    minutes.value--;
+  }
+  seconds.value--;
+  minutes.value = timePrettier(minutes.value);
+  seconds.value = timePrettier(seconds.value);
+};
+
+const timerStop = () => {
+  clearInterval(timerId);
+  toSwitch(settings, false)
+  if (button.disabled) {
+    ring.classList.add('ending');
+  }
+};
+
+const timerStart = () => {
+  toSwitch([settings, minutes, seconds], true);
+  timerId = setInterval(() => {
+    if (!(+minutes.value + +seconds.value)) {
+      toSwitch(button, true);
+      btnCapture();
+      return;
     }
+    timeIncrement();
+  }, 1000);
+};
 
-    if (gear) {
-        clearInterval(timerId)
-        ring.classList.remove('ending');
-        button.textContent = 'start';
-        min.disabled = false;
-        sec.disabled = false;
-    }
+const clickOnGear = () => {
+  ring.classList.remove('ending');
+  toSwitch([minutes, seconds], false)
+  timerOnInput();
+};
 
-   if (seconds) {
-       e.target.addEventListener("input", ()=> {
-          if (e.target.value > 59) e.target.value = 59;
-       })
-   }
+const btnCapture = () => {
+  if (button.textContent === btnCaptureStart) {
+    button.textContent = btnCaptureEnd;
+    timerStart();
+  } else {
+    button.textContent = btnCaptureStart;
+    timerStop();
+  }
+};
 
-    function timerStart () {
-        ring.classList.remove('ending');
-        min.disabled = true;
-        sec.disabled = true;
-        timerId  = setInterval( function() {
-            if (parseInt(min.value) === 0 && parseInt(sec.value) === 0) {
-                timerStop();
-                ring.classList.add('ending');
-                return;
-            }
+const timerClicked = (e) => {
+  const target = e.target.closest('button');
+  e.stopImmediatePropagation();
+  if (target === button) btnCapture();
+  if (target === settings && !settings.disabled) {
+    clickOnGear();
+  }
+};
 
-            if (sec.value == 0) {
-                sec.value = 60;
-            min.value--;
-            }
-        sec.value--;
-        
-        if (sec.value.length < 2) sec.value = '0' + sec.value;
-        if (min.value.length < 2) min.value = '0' + min.value;
-        }, 1000);
-    }
-    
-    function timerStop () {
-        clearInterval(timerId);
-    }
-});
+timer.addEventListener('click', timerClicked);

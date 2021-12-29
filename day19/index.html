@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19 - Form Validation || Advent of JavaScript</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+
+  <form action="">
+    <h1>Signup</h1>
+    <div class="field">
+      <input class="field__input" type="text" name="name" id="name" placeholder=" "/>
+      <label for="name">Name</label>
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
+      </div>
+    </div>
+    <div class="field">
+      <input class="field__input" type="email" name="email" id="email" placeholder=" " />
+      <label for="email">Email</label>
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
+      </div>
+    </div>
+    <div class="field">
+      <input class="field__input" type="password" data-i="password" name="password" id="password" placeholder=" "/>
+      <label for="password">Password</label>
+      <button class="show-hide hide"></button>
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
+      </div>
+    </div>
+    <div class="field">
+      <input class="field__input confirm-password" type="password" name="confirm-password" id="confirm-password" placeholder=" " disabled/>
+      <label for="confirm-password">Confirm Password</label>
+      <button class="show-hide hide"></button>
+      <div class="output">
+        <div class="output__img"></div>
+        <div class="output__text"></div>
+      </div>
+    </div>
+    <div class="field">
+      <input class="submit" type="submit" name="submit" value="Submit"/>
+    </div>
+  </form>
+  <script src="app.js"></script>
+</body>
+
+</html>

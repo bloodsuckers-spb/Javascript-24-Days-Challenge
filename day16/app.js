@@ -8,7 +8,6 @@ let initialClientX;
 
 function handler(e) {
     const star = e.target.closest('.star');
-     
     if (star) {
         if (e.type == 'mouseover') {
             initialClientX = e.clientX;
