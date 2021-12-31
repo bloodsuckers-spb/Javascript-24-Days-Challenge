@@ -134,7 +134,7 @@ input[type="submit"] {
 }
 
  .valid {
-  background-image: url('/day19/images/success.svg');
+  background-image: url('./images/success.svg');
 }
 
 .invalid {
