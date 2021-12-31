@@ -62,6 +62,10 @@ const createElement = (type, className) => {
   return el;
 };
 
+const totalPriceOutput = (el, val) => {
+  el.textContent = `$` + val.toFixed(2);
+};
+
 const emptyCartNotification = () => {
   const p = createElement('p', 'empty');
   p.textContent = `Your cart is empty.`;
@@ -78,12 +82,12 @@ const fullSubTotalPrice = () => {
 };
 
 const renderTotalPrice = () => {
-  const subtotalValue = fullSubTotalPrice()
+  const subtotalValue = fullSubTotalPrice();
   const taxValue = subtotalValue * 0.0975;
   if (!subtotalValue) emptyCartNotification();
-  subtotal.textContent = `$` + subtotalValue.toFixed(2) ;
-  tax.textContent = `$` + taxValue.toFixed(2);
-  total.textContent = `$` + (taxValue + subtotalValue).toFixed(2);
+  totalPriceOutput(subtotal, subtotalValue);
+  totalPriceOutput(tax, taxValue);
+  totalPriceOutput(total, taxValue + subtotalValue);
 };
 
 const createItem = (el, ind) => {
