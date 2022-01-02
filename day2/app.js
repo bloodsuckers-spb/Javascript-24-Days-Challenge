@@ -4,7 +4,7 @@ const menuItems = [
     price: 2.23,
     image: 'plate__french-fries.png',
     alt: 'French Fries',
-    count: 2,
+    count: 0,
   },
   {
     name: 'Salmon and Vegetables',
@@ -39,125 +39,137 @@ const menuItems = [
     price: 6.34,
     image: 'plate__fish-sticks-fries.png',
     alt: 'Fish Sticks and Fries',
-    count: 1,
+    count: 0,
   },
 ];
 
-const menu = document.querySelector('.menu');
+const menu = document.querySelector('.wrapper .menu');
 const cart = document.querySelector('.cart');
-const totals = cart.querySelector('.totals');
 const cartSummary = cart.querySelector('.cart-summary');
-const subtotal = totals.querySelector('.subtotal');
-const tax = totals.querySelector('.tax');
-const total = totals.querySelector('.total .total');
-const quantityWrapperTemplate = cart.querySelector('.quantity__wrapper');
+const subtotal = cart.querySelector('.totals .subtotal');
+const tax = cart.querySelector('.totals .tax');
+const full = cart.querySelector('.totals .total .total');
+const empty = cart.querySelector('.empty');
+const arrowImg = '<img src="images/chevron.svg" />';
+let instanceAmount = 0;
 
-const inCartString = `<img src="images/check.svg" alt="Check" />
-In Cart`;
-const addtoCartString = 'Add to Cart';
+class Cart {
+  
+  constructor(instance, btn) {
+    ++instanceAmount;
+    this.instance = instance.cloneNode(true);
+    this.index = instance.dataset.ind;
+    this.btn = btn;
+    this.quantityOutput = this.createElement('div', 'quantity');
+    this.imgQuantityOutput = this.createElement('div', 'quantity');
+    this.instancePriceOutput = this.createElement('div', 'subtotal')
+    this.addButtonSwitcher();
+    this.emptyCartNotification();
+    this.renderItem();
+    this.increaseQuantity();
+    this.renderPriceAndQuantity();
+    this.bindEvents();
+  }
 
-const createElement = (type, className) => {
-  const el = document.createElement(type);
-  el.classList.add(className);
-  return el;
-};
+  createElement(type, className, str) {
+    const el = document.createElement(type);
+    el.classList.add(className);
+    if (str) {
+      el.innerHTML = str;
+    }
+    return el;
+  }
 
-const totalPriceOutput = (el, val) => {
-  el.textContent = `$` + val.toFixed(2);
-};
+  pricePrettier(el, val) {
+    el.textContent = `$` + val.toFixed(2);
+  }
 
-const emptyCartNotification = () => {
-  const p = createElement('p', 'empty');
-  p.textContent = `Your cart is empty.`;
-  cartSummary.prepend(p);
-};
+  subtotalPrice(arr) {
+    return arr
+      .filter((el) => el.count > 0)
+      .map((el) => el.price * el.count)
+      .reduce((el, acc) => {
+        return acc + el;
+      }, 0);
+  }
 
-const fullSubTotalPrice = () => {
-  return menuItems
-    .filter((el) => el.count > 0)
-    .map((el) => el.price * el.count)
-    .reduce((el, acc) => {
-      return acc + el;
-    }, 0);
-};
+  emptyCartNotification() {
+    empty.textContent = instanceAmount ? '' : 'Your cart is empty.';
+  }
 
-const renderTotalPrice = () => {
-  const subtotalValue = fullSubTotalPrice();
-  const taxValue = subtotalValue * 0.0975;
-  if (!subtotalValue) emptyCartNotification();
-  totalPriceOutput(subtotal, subtotalValue);
-  totalPriceOutput(tax, taxValue);
-  totalPriceOutput(total, taxValue + subtotalValue);
-};
-
-const createItem = (el, ind) => {
-  const li = el.cloneNode(true);
-  const quantityWrapper = quantityWrapperTemplate.cloneNode(true);
-  const quantity = createElement('div', 'quantity');
-  const subtotal = createElement('div', 'subtotal');
-  const [plate, content] = li.children;
-  content.lastElementChild.remove();
-  quantity.textContent = ++menuItems[ind].count;
-  subtotal.textContent = `$${menuItems[ind].count * menuItems[ind].price}`;
-  li.append(quantityWrapper, subtotal);
-  plate.append(quantity);
-  return li;
-};
-
-const deleteItem = (el, ind) => {
-  const btn = menu.querySelector(`[data-ind = "${ind}"] .in-cart`);
-  el.remove();
-  btn.classList.remove('in-cart');
-  btn.classList.add('add');
-  btn.innerHTML = addtoCartString;
-};
-
-const renderItem = (el, ind) => {
-  const quantity = el.querySelectorAll('.quantity');
-  const subtotal = el.lastElementChild;
-  const subtotalPrice = menuItems[ind].count * menuItems[ind].price;
-  quantity.forEach((el) => {
-    el.textContent = menuItems[ind].count;
-  });
-  subtotal.textContent = `$${subtotalPrice.toFixed(2)}`;
-};
-
-const addToCard = (e) => {
-  const btn = e.target.closest('.add');
-
-  if (btn) {
-    const target = e.target.closest('li');
-    const index = target.dataset.ind;
-    const li = createItem(target, index);
-    btn.classList.remove('add');
-    btn.classList.add('in-cart');
-    btn.innerHTML = inCartString;
-    if (cart.querySelector('.empty')) {
-      cart.querySelector('.empty').replaceWith(li);
+  addButtonSwitcher() {
+    if (!this.btn.classList[1]) {
+      this.btn.classList.add('in-cart');
+      this.btn.innerHTML = `<img src="images/check.svg" alt="Check" />
+      In Cart`;
     } else {
-      cartSummary.append(li);
+      this.btn.classList.remove('in-cart');
+      this.btn.innerHTML = 'Add to Cart';
     }
-    renderTotalPrice();
   }
+
+  renderItem() {
+    const quantityWrapper = this.createElement('div', 'quantity__wrapper');
+    const decrease = this.createElement('button', 'decrease', arrowImg);
+    const increase = this.createElement('button', 'increase', arrowImg);
+    this.instance.querySelector('button').remove();
+    quantityWrapper.append(decrease, this.quantityOutput, increase);
+    this.instance.append(quantityWrapper, this.instancePriceOutput);
+    this.instance.children[0].append(this.imgQuantityOutput);
+    cartSummary.append(this.instance);
+  }
+
+  deleteItem() {
+    this.instance.remove();
+    --instanceAmount;
+    this.addButtonSwitcher();
+    this.emptyCartNotification();
+  }
+
+  increaseQuantity() {
+    this.quantity = ++menuItems[this.index].count;
+  }
+
+  decreaseQuantity() {
+    this.quantity = --menuItems[this.index].count;
+    if (!this.quantity) {
+      this.deleteItem();
+    }
+  }
+
+  renderPriceAndQuantity() {
+    this.instancePrice = this.quantity * menuItems[this.index].price;
+    this.subtotal = this.subtotalPrice(menuItems);
+    this.taxValue = this.subtotal * 0.0975;
+    this.fullPrice = this.subtotal + this.taxValue;
+    this.quantityOutput.textContent = this.quantity;
+    this.imgQuantityOutput.textContent = this.quantity;
+    this.pricePrettier(this.instancePriceOutput, this.instancePrice);
+    this.pricePrettier(subtotal, this.subtotal);
+    this.pricePrettier(tax, this.taxValue);
+    this.pricePrettier(full, this.fullPrice);
+  }
+
+  bindEvents() {
+    this.instance.addEventListener('click', (e) => {
+      const arrow = e.target.closest('button');
+      if (arrow) {
+        if (arrow.classList[0] === 'increase') {
+          this.increaseQuantity();
+        }
+        if (arrow.classList[0] === 'decrease') {
+          this.decreaseQuantity();
+        }
+        this.renderPriceAndQuantity();
+      }
+    });
+  }
+}
+
+const addItem = (e) => {
+  if (e.target.closest('.add')) {
+       new Cart(e.target.closest('.item'), e.target);
+  } 
 };
 
-const cartOnclick = (e) => {
-  const arrow = e.target.closest('button');
-
-  if (arrow) {
-    const target = e.target.closest('li');
-    const ind = target.dataset.ind;
-    if (arrow.classList[0] === 'increase') {
-      ++menuItems[ind].count;
-      renderItem(target, ind);
-    }
-    if (arrow.classList[0] === 'decrease') {
-      --menuItems[ind].count;
-      !menuItems[ind].count ? deleteItem(target, ind) : renderItem(target, ind);
-    }
-    renderTotalPrice();
-  }
-};
-
-menu.addEventListener('click', addToCard);
-cart.addEventListener('click', cartOnclick);
+menu.addEventListener('click', addItem);
