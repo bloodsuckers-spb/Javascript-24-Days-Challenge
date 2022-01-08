@@ -51,18 +51,18 @@ const tax = cart.querySelector('.totals .tax');
 const full = cart.querySelector('.totals .total .total');
 const empty = cart.querySelector('.empty');
 const arrowImg = '<img src="images/chevron.svg" />';
-let instanceAmount = 0;
 
 class Cart {
-  
+  static instanceAmount = 0;
+
   constructor(instance, btn) {
-    ++instanceAmount;
+    ++Cart.instanceAmount;
     this.instance = instance.cloneNode(true);
     this.index = instance.dataset.ind;
     this.btn = btn;
     this.quantityOutput = this.createElement('div', 'quantity');
     this.imgQuantityOutput = this.createElement('div', 'quantity');
-    this.instancePriceOutput = this.createElement('div', 'subtotal')
+    this.instancePriceOutput = this.createElement('div', 'subtotal');
     this.addButtonSwitcher();
     this.emptyCartNotification();
     this.renderItem();
@@ -94,7 +94,7 @@ class Cart {
   }
 
   emptyCartNotification() {
-    empty.textContent = instanceAmount ? '' : 'Your cart is empty.';
+    empty.textContent = Cart.instanceAmount ? '' : 'Your cart is empty.';
   }
 
   addButtonSwitcher() {
@@ -121,7 +121,7 @@ class Cart {
 
   deleteItem() {
     this.instance.remove();
-    --instanceAmount;
+    --Cart.instanceAmount;
     this.addButtonSwitcher();
     this.emptyCartNotification();
   }
@@ -168,8 +168,8 @@ class Cart {
 
 const addItem = (e) => {
   if (e.target.closest('.add')) {
-       new Cart(e.target.closest('.item'), e.target);
-  } 
+    new Cart(e.target.closest('.item'), e.target);
+  }
 };
 
 menu.addEventListener('click', addItem);
