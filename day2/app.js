@@ -50,25 +50,26 @@ const subtotal = cart.querySelector('.totals .subtotal');
 const tax = cart.querySelector('.totals .tax');
 const full = cart.querySelector('.totals .total .total');
 const empty = cart.querySelector('.empty');
+
 const arrowImg = '<img src="images/chevron.svg" />';
 
 class Cart {
+  
   static instanceAmount = 0;
+  static subtotal = 0;
+  static tax = 0;
+  static total = 0;
 
-  constructor(instance, btn) {
-    ++Cart.instanceAmount;
-    this.instance = instance.cloneNode(true);
-    this.index = instance.dataset.ind;
+  constructor(btn) {
     this.btn = btn;
-    this.quantityOutput = this.createElement('div', 'quantity');
-    this.imgQuantityOutput = this.createElement('div', 'quantity');
-    this.instancePriceOutput = this.createElement('div', 'subtotal');
+    this.index = btn.dataset.ind;
+    this.amount = ++menuItems[this.index].count;
+    this.price = menuItems[this.index].price;
+    ++Cart.instanceAmount;
+
+    this.renderItem();
     this.addButtonSwitcher();
     this.emptyCartNotification();
-    this.renderItem();
-    this.increaseQuantity();
-    this.renderPriceAndQuantity();
-    this.bindEvents();
   }
 
   createElement(type, className, str) {
@@ -102,52 +103,82 @@ class Cart {
       this.btn.classList.add('in-cart');
       this.btn.innerHTML = `<img src="images/check.svg" alt="Check" />
       In Cart`;
+      this.btn.disabled = true;
     } else {
       this.btn.classList.remove('in-cart');
       this.btn.innerHTML = 'Add to Cart';
+      this.btn.disabled = false;
     }
   }
 
   renderItem() {
+    const li = this.createElement('li', 'item');
+    const plate = this.createElement('div', 'plate');
+    const content = this.createElement('div', 'content');
+    const menuItem = this.createElement(
+      'div',
+      'menu-item',
+      menuItems[this.index].name
+    );
+    const price = this.createElement('div', 'price', this.price);
+    const img = Object.assign(this.createElement('img', 'content'), {
+      src: 'images/' + menuItems[this.index].image,
+      alt: menuItems[this.index].alt,
+    });
     const quantityWrapper = this.createElement('div', 'quantity__wrapper');
     const decrease = this.createElement('button', 'decrease', arrowImg);
     const increase = this.createElement('button', 'increase', arrowImg);
-    this.instance.querySelector('button').remove();
-    quantityWrapper.append(decrease, this.quantityOutput, increase);
-    this.instance.append(quantityWrapper, this.instancePriceOutput);
-    this.instance.children[0].append(this.imgQuantityOutput);
-    cartSummary.append(this.instance);
+    const subtotal = this.createElement('div', 'subtotal');
+    const quantity = this.createElement('div', 'quantity');
+    const quantityImg = this.createElement('div', 'quantity');
+    plate.append(quantityImg, img);
+    content.append(menuItem, price);
+    quantityWrapper.append(decrease, quantity, increase);
+    li.append(plate, content, quantityWrapper, subtotal);
+    cartSummary.append(li);
+    
+    this.instance = li;
+    this.instanceSubtotalOutput = subtotal;
+    this.instanceAmountOutput = quantity;
+    this.instanceAmountOutputImg = quantityImg;
+
+    this.renderPriceAndQuantity();
+    this.bindEvents();
   }
 
   deleteItem() {
     this.instance.remove();
-    --Cart.instanceAmount;
     this.addButtonSwitcher();
-    this.emptyCartNotification();
+    --Cart.instanceAmount;
+    if (!Cart.instanceAmount) {
+      this.emptyCartNotification();
+    }
   }
 
-  increaseQuantity() {
-    this.quantity = ++menuItems[this.index].count;
+  increaseAmount() {
+    this.amount = ++menuItems[this.index].count;
   }
 
-  decreaseQuantity() {
-    this.quantity = --menuItems[this.index].count;
-    if (!this.quantity) {
+  decreaseAmount() {
+    this.amount = --menuItems[this.index].count;
+    if (!this.amount) {
       this.deleteItem();
     }
   }
 
   renderPriceAndQuantity() {
-    this.instancePrice = this.quantity * menuItems[this.index].price;
-    this.subtotal = this.subtotalPrice(menuItems);
-    this.taxValue = this.subtotal * 0.0975;
-    this.fullPrice = this.subtotal + this.taxValue;
-    this.quantityOutput.textContent = this.quantity;
-    this.imgQuantityOutput.textContent = this.quantity;
-    this.pricePrettier(this.instancePriceOutput, this.instancePrice);
-    this.pricePrettier(subtotal, this.subtotal);
-    this.pricePrettier(tax, this.taxValue);
-    this.pricePrettier(full, this.fullPrice);
+    const subtotalElementPrice = this.amount * this.price;
+    Cart.subtotal += subtotalElementPrice;
+    Cart.tax += subtotalElementPrice * 0.0975;
+    Cart.total = Cart.subtotal + Cart.tax;
+
+    this.pricePrettier(this.instanceSubtotalOutput, subtotalElementPrice);
+    this.pricePrettier(subtotal, Cart.subtotal);
+    this.pricePrettier(tax, Cart.tax);
+    this.pricePrettier(full, Cart.total);
+
+    this.instanceAmountOutput.textContent = this.amount;
+    this.instanceAmountOutputImg.textContent = this.amount;
   }
 
   bindEvents() {
@@ -155,10 +186,10 @@ class Cart {
       const arrow = e.target.closest('button');
       if (arrow) {
         if (arrow.classList[0] === 'increase') {
-          this.increaseQuantity();
+          this.increaseAmount();
         }
         if (arrow.classList[0] === 'decrease') {
-          this.decreaseQuantity();
+          this.decreaseAmount();
         }
         this.renderPriceAndQuantity();
       }
@@ -168,7 +199,7 @@ class Cart {
 
 const addItem = (e) => {
   if (e.target.closest('.add')) {
-    new Cart(e.target.closest('.item'), e.target);
+    new Cart(e.target);
   }
 };
 
