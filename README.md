@@ -53,6 +53,18 @@ Deploy: [Piano](https://bloodsuckers-spb.github.io/advent-of-js/day03/ 'Piano')
 
 Deploy: [keyboard](https://bloodsuckers-spb.github.io/advent-of-js/day04/ 'keyboard')
 
+
+### Day 6: Range Slider
+
+![Range Slider](/images/day6-screen.png 'Range Slider')
+
+#### Users should be able to:
+
+- Move the knob on the range and the dollar amount above it will update.
+
+Deploy: [Range Slider](https://bloodsuckers-spb.github.io/advent-of-js/day06/ 'Range Slider')
+
+
 ### Day 10: Password Verifier
 
 ![password-verifier](/images/day10-screen.png 'Password Verifier')
