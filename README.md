@@ -29,6 +29,18 @@ Deploy: [Pomodoro Timer](https://bloodsuckers-spb.github.io/advent-of-js/day01/ 
 
 Deploy: [E-Commerce Component](https://bloodsuckers-spb.github.io/advent-of-js/day02/ 'E-Commerce Component')
 
+### Day 3: Piano
+
+![Piano](/images/day3-screen.png 'Piano')
+
+#### Users should be able to:
+
+- When a user clicks on a specific key, it will play an audio clip.
+  - The audio clips are numbered, but I did not specifically number the keys. You can pick which key should be associated with each audio file.
+  - If a user clicks on one key, then immediately clicks on a second key. The 2 files should both play. Meaning, clicking on one key will not stop an existing audio file from playing.
+
+Deploy: [Piano](https://bloodsuckers-spb.github.io/advent-of-js/day03/ 'Piano')
+
 ### Day 10: Password Verifier
 
 ![password-verifier](/images/day10-screen.png 'Password Verifier')
