@@ -41,6 +41,18 @@ Deploy: [E-Commerce Component](https://bloodsuckers-spb.github.io/advent-of-js/d
 
 Deploy: [Piano](https://bloodsuckers-spb.github.io/advent-of-js/day03/ 'Piano')
 
+### Day 4: Keyboard
+
+![keyboard](/images/day4-screen.png 'keyboard')
+
+#### Users should be able to:
+
+- A random letter will start to jiggle.
+- The user should type the same key that's jiggling and it will stop.
+- A new, random key will start jiggling
+
+Deploy: [keyboard](https://bloodsuckers-spb.github.io/advent-of-js/day04/ 'keyboard')
+
 ### Day 10: Password Verifier
 
 ![password-verifier](/images/day10-screen.png 'Password Verifier')
