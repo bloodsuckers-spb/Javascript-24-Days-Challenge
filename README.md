@@ -53,7 +53,6 @@ Deploy: [Piano](https://bloodsuckers-spb.github.io/advent-of-js/day03/ 'Piano')
 
 Deploy: [keyboard](https://bloodsuckers-spb.github.io/advent-of-js/day04/ 'keyboard')
 
-
 ### Day 6: Range Slider
 
 ![Range Slider](/images/day6-screen.png 'Range Slider')
@@ -63,7 +62,6 @@ Deploy: [keyboard](https://bloodsuckers-spb.github.io/advent-of-js/day04/ 'keybo
 - Move the knob on the range and the dollar amount above it will update.
 
 Deploy: [Range Slider](https://bloodsuckers-spb.github.io/advent-of-js/day06/ 'Range Slider')
-
 
 ### Day 10: Password Verifier
 
@@ -75,6 +73,16 @@ Deploy: [Range Slider](https://bloodsuckers-spb.github.io/advent-of-js/day06/ 'R
 - paste in a 4 digit code
 
 Deploy: [Password Verifier](https://bloodsuckers-spb.github.io/advent-of-js/day10/ 'Password Verifier')
+
+### Day 12: Rock, Paper, Scissors
+
+![Rock, Paper, Scissors](/images/day12-screen.png 'Rock, Paper, Scissors')
+
+#### Users should be able to:
+
+- play the game and see the results
+
+Deploy: [Rock, Paper, Scissors](https://bloodsuckers-spb.github.io/advent-of-js/day12/ 'Rock, Paper, Scissors')
 
 ### Day 14: Calendar Viewer
 
