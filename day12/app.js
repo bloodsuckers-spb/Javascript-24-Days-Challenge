@@ -38,9 +38,9 @@ wrapper.addEventListener('click', (e) => {
     const userValue = target.textContent.trim();
     const computerValue = getComputerValue(userValue);
     const winner = verifyChampion(userValue, computerValue);
-    localStorage.setItem('winner', winner);
-    localStorage.setItem('user-value', userValue);
-    localStorage.setItem('pc-value', computerValue);
+    sessionStorage.setItem('winner', winner);
+    sessionStorage.setItem('user-value', userValue);
+    sessionStorage.setItem('pc-value', computerValue);
     window.open('winner.html', '_self', false);
   }
 });
