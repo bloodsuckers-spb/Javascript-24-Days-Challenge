@@ -1,104 +1,73 @@
-const menuItems = [
+const data = [
   {
     name: 'French Fries with Ketchup',
     price: 2.23,
-    image: 'plate__french-fries.png',
-    alt: 'French Fries',
-    count: 0,
+    imgSrc: 'plate__french-fries.png',
+    imgAlt: 'French Fries',
   },
   {
     name: 'Salmon and Vegetables',
     price: 5.12,
-    image: 'plate__salmon-vegetables.png',
-    alt: 'Salmon and Vegetables',
-    count: 0,
+    imgSrc: 'plate__salmon-vegetables.png',
+    imgAlt: 'Salmon and Vegetables',
   },
   {
     name: 'Spaghetti with Meat Sauce',
     price: 7.82,
-    image: 'plate__spaghetti-meat-sauce.png',
-    alt: 'Spaghetti with Meat Sauce',
-    count: 0,
+    imgSrc: 'plate__spaghetti-meat-sauce.png',
+    imgAlt: 'Spaghetti with Meat Sauce',
   },
   {
     name: 'Bacon, Eggs, and Toast',
     price: 5.99,
-    image: 'plate__bacon-eggs.png',
-    alt: 'Bacon, Eggs, and Toast',
-    count: 0,
+    imgSrc: 'plate__bacon-eggs.png',
+    imgAlt: 'Bacon, Eggs, and Toast',
   },
   {
     name: 'Chicken Salad with Parmesan',
     price: 6.98,
-    image: 'plate__chicken-salad.png',
-    alt: 'Chicken Salad with Parmesan',
-    count: 0,
+    imgSrc: 'plate__chicken-salad.png',
+    imgAlt: 'Chicken Salad with Parmesan',
   },
   {
     name: 'Fish Sticks and Fries',
     price: 6.34,
-    image: 'plate__fish-sticks-fries.png',
-    alt: 'Fish Sticks and Fries',
-    count: 0,
+    imgSrc: 'plate__fish-sticks-fries.png',
+    imgAlt: 'Fish Sticks and Fries',
   },
 ];
 
-const menu = document.querySelector('.wrapper .menu');
-const cart = document.querySelector('.cart');
-const cartSummary = cart.querySelector('.cart-summary');
-const subtotal = cart.querySelector('.totals .subtotal');
-const tax = cart.querySelector('.totals .tax');
-const full = cart.querySelector('.totals .total .total');
-const empty = cart.querySelector('.empty');
-
-const arrowImg = '<img src="images/chevron.svg" />';
+const menuField = document.querySelector('.wrapper .menu');
+const cartSummaryOutput = document.querySelector('.cart-summary');
+const priceOutput = document.querySelector('.totals');
+const emptyCartCaption = document.querySelector('.empty');
 
 class Cart {
-  
-  static instanceAmount = 0;
-  static subtotal = 0;
-  static tax = 0;
-  static total = 0;
+  static state = {
+    instanceAmount: 0,
+    priceBeforeTax: 0,
+    fullTax: 0,
+    fullPrice: 0,
+  };
 
-  constructor(btn) {
+  constructor(btn, menuItem) {
     this.btn = btn;
-    this.index = btn.dataset.ind;
-    this.amount = ++menuItems[this.index].count;
-    this.price = menuItems[this.index].price;
-    ++Cart.instanceAmount;
-
-    this.renderItem();
-    this.addButtonSwitcher();
-    this.emptyCartNotification();
+    this.name = menuItem['name'];
+    this.imgSrc = menuItem['imgSrc'];
+    this.imgAlt = menuItem['imgAlt'];
+    this.price = menuItem['price'];
+    this.subtotalPrice = menuItem['price'];
+    this.amount = 1;
+    this.init();
   }
 
-  createElement(type, className, str) {
-    const el = document.createElement(type);
-    el.classList.add(className);
-    if (str) {
-      el.innerHTML = str;
-    }
-    return el;
+  setCartCaption() {
+    emptyCartCaption.textContent = Cart.state.instanceAmount
+      ? ''
+      : 'Your cart is empty.';
   }
 
-  pricePrettier(el, val) {
-    el.textContent = `$` + val.toFixed(2);
-  }
-
-  subtotalPrice(arr) {
-    return arr
-      .filter((el) => el.count > 0)
-      .map((el) => el.price * el.count)
-      .reduce((el, acc) => {
-        return acc + el;
-      }, 0);
-  }
-
-  emptyCartNotification() {
-    empty.textContent = Cart.instanceAmount ? '' : 'Your cart is empty.';
-  }
-
-  addButtonSwitcher() {
+  setBtnState() {
     if (!this.btn.classList[1]) {
       this.btn.classList.add('in-cart');
       this.btn.innerHTML = `<img src="images/check.svg" alt="Check" />
@@ -111,96 +80,121 @@ class Cart {
     }
   }
 
-  renderItem() {
-    const li = this.createElement('li', 'item');
-    const plate = this.createElement('div', 'plate');
-    const content = this.createElement('div', 'content');
-    const menuItem = this.createElement(
-      'div',
-      'menu-item',
-      menuItems[this.index].name
-    );
-    const price = this.createElement('div', 'price', this.price);
-    const img = Object.assign(this.createElement('img', 'content'), {
-      src: 'images/' + menuItems[this.index].image,
-      alt: menuItems[this.index].alt,
-    });
-    const quantityWrapper = this.createElement('div', 'quantity__wrapper');
-    const decrease = this.createElement('button', 'decrease', arrowImg);
-    const increase = this.createElement('button', 'increase', arrowImg);
-    const subtotal = this.createElement('div', 'subtotal');
-    const quantity = this.createElement('div', 'quantity');
-    const quantityImg = this.createElement('div', 'quantity');
-    plate.append(quantityImg, img);
-    content.append(menuItem, price);
-    quantityWrapper.append(decrease, quantity, increase);
-    li.append(plate, content, quantityWrapper, subtotal);
-    cartSummary.append(li);
-    
-    this.instance = li;
-    this.instanceSubtotalOutput = subtotal;
-    this.instanceAmountOutput = quantity;
-    this.instanceAmountOutputImg = quantityImg;
-
-    this.renderPriceAndQuantity();
+  init() {
+    ++Cart.state.instanceAmount;
+    this.setBtnState();
+    this.setCartCaption();
+    this.calculateFullPrice();
+    this.renderItem();
+    this.renderMarkup();
+    this.renderFullPrice();
     this.bindEvents();
+  }
+
+  renderItem() {
+    const li = document.createElement('li');
+    cartSummaryOutput.append(li);
+    this.instance = li;
+  }
+
+  renderMarkup() {
+    const markup = `
+      <div class="plate">
+        <img src="images/${this.imgSrc}" alt="${this.imgAlt}">
+        <div class="quantity">${this.amount}</div>
+      </div>
+      <div class="content">
+        <p class="menu-item">${this.name}</p>
+        <p class="price">$${this.price}</p>
+      </div>
+      <div class="quantity__wrapper">
+      <button class="decrease"><img src="images/chevron.svg" /></button>
+      <div class="quantity">${this.amount}</div>
+      <button class="increase"><img src="images/chevron.svg" /></button>
+      </div><div class="subtotal">$${this.subtotalPrice}</div>
+    `;
+
+    this.instance.innerHTML = markup;
   }
 
   deleteItem() {
     this.instance.remove();
-    this.addButtonSwitcher();
-    --Cart.instanceAmount;
-    if (!Cart.instanceAmount) {
-      this.emptyCartNotification();
+    this.setBtnState();
+    --Cart.state.instanceAmount;
+    if (!Cart.state.instanceAmount) {
+      this.setCartCaption();
     }
   }
 
   increaseAmount() {
-    this.amount = ++menuItems[this.index].count;
+    ++this.amount;
   }
 
   decreaseAmount() {
-    this.amount = --menuItems[this.index].count;
+    --this.amount;
     if (!this.amount) {
       this.deleteItem();
     }
   }
 
-  renderPriceAndQuantity() {
-    const subtotalElementPrice = this.amount * this.price;
-    Cart.subtotal += subtotalElementPrice;
-    Cart.tax += subtotalElementPrice * 0.0975;
-    Cart.total = Cart.subtotal + Cart.tax;
+  calculateFullPrice() {
+    const pricePrettier = (val) => Math.round(parseFloat(val) * 100) / 100;
+    const subtotalPrice = this.amount * this.price;
+    const priceBeforeTax = Cart.state.priceBeforeTax;
+    const fullTax = Cart.state.fullTax;
+    this.subtotalPrice = pricePrettier(subtotalPrice);
+    Cart.state.priceBeforeTax = pricePrettier(
+      priceBeforeTax + this.subtotalPrice
+    );
+    Cart.state.fullTax = pricePrettier(fullTax + this.subtotalPrice * 0.0975);
+    Cart.state.fullPrice = pricePrettier(
+      Cart.state.fullTax + Cart.state.priceBeforeTax
+    );
+  }
 
-    this.pricePrettier(this.instanceSubtotalOutput, subtotalElementPrice);
-    this.pricePrettier(subtotal, Cart.subtotal);
-    this.pricePrettier(tax, Cart.tax);
-    this.pricePrettier(full, Cart.total);
+  renderFullPrice() {
+    const markup = `<div class="line-item">
+      <div class="label">Subtotal:</div>
+      <div class="amount price subtotal">$${Cart.state.priceBeforeTax}</div>
+    </div>
+    <div class="line-item">
+      <div class="label">Tax:</div>
+      <div class="amount price tax">$${Cart.state.fullTax}</div>
+    </div>
+    <div class="line-item">
+      <div class="label">Total:</div>
+      <div class="amount price total">$${Cart.state.fullPrice}</div>
+    </div>`;
 
-    this.instanceAmountOutput.textContent = this.amount;
-    this.instanceAmountOutputImg.textContent = this.amount;
+    priceOutput.innerHTML = markup;
+  }
+
+  handleClick(e) {
+    const arrow = e.target.closest('button');
+    if (arrow) {
+      if (arrow.classList[0] === 'increase') {
+        this.increaseAmount();
+      }
+      if (arrow.classList[0] === 'decrease') {
+        this.decreaseAmount();
+      }
+      this.calculateFullPrice();
+      this.renderMarkup();
+      this.renderFullPrice();
+    }
   }
 
   bindEvents() {
-    this.instance.addEventListener('click', (e) => {
-      const arrow = e.target.closest('button');
-      if (arrow) {
-        if (arrow.classList[0] === 'increase') {
-          this.increaseAmount();
-        }
-        if (arrow.classList[0] === 'decrease') {
-          this.decreaseAmount();
-        }
-        this.renderPriceAndQuantity();
-      }
-    });
+    this.instance.addEventListener('click', (e) => this.handleClick(e));
   }
 }
 
 const addItem = (e) => {
   if (e.target.closest('.add')) {
-    new Cart(e.target);
+    const btn = e.target;
+    const index = btn.dataset.ind;
+    new Cart(btn, data[index]);
   }
 };
 
-menu.addEventListener('click', addItem);
+menuField.addEventListener('click', addItem);
