@@ -53,6 +53,17 @@ Deploy: [Piano](https://bloodsuckers-spb.github.io/advent-of-js/day03/ 'Piano')
 
 Deploy: [keyboard](https://bloodsuckers-spb.github.io/advent-of-js/day04/ 'keyboard')
 
+### Day 5: Multiple Checkboxes
+
+![Multiple Checkboxes](/images/day5-screen.png 'Multiple Checkboxes')
+
+#### Users should be able to:
+
+- See the list of podcast episodes
+- Check one episode, shift-click to select all the episodes in between
+
+Deploy: [Multiple Checkboxes](https://bloodsuckers-spb.github.io/advent-of-js/day05/ 'Multiple Checkboxes')
+
 ### Day 6: Range Slider
 
 ![Range Slider](/images/day6-screen.png 'Range Slider')
